@@ -1,0 +1,262 @@
+.section {
+  position: relative;
+  height: 220svh;
+}
+
+/* Touch has no camera dolly to scroll through, so the pinned stretch is kept to half a screen:
+   one swipe clears the hero instead of two. */
+@media (hover: none), (pointer: coarse) {
+  .section {
+    height: 150svh;
+  }
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--sky-top);
+}
+
+/* ---------- Parallax planes ---------- */
+
+.stage[data-dormant='true'] .layer {
+  display: none;
+}
+
+.layer {
+  position: absolute;
+  inset: -4%;
+  transform-origin: 50% var(--dolly-y);
+  will-change: transform;
+}
+
+.svgLayer,
+.canvasLayer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.lightLayer {
+  pointer-events: none;
+}
+
+.dayOnly,
+.nightOnly {
+  transition: opacity 700ms var(--ease-out);
+}
+
+.dayOnly {
+  opacity: 0;
+}
+
+:global(:root[data-theme='day']) .dayOnly {
+  opacity: 1;
+}
+
+:global(:root[data-theme='day']) .nightOnly {
+  opacity: 0;
+}
+
+/* ---------- Sky details ---------- */
+
+.lamp {
+  fill: #59626f;
+  transition: fill 400ms ease;
+}
+
+:global(:root[data-theme='night']) .lamp {
+  fill: var(--light);
+  animation: power-up 1.3s steps(1, end) both;
+}
+
+@keyframes power-up {
+  0% {
+    opacity: 0.15;
+  }
+  12% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 0.25;
+  }
+  30% {
+    opacity: 1;
+  }
+  36% {
+    opacity: 0.5;
+  }
+  48%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ---------- Wall ---------- */
+
+.wallName {
+  fill: var(--wall-ink);
+  font-family: var(--font-display);
+  font-weight: 900;
+}
+
+/* ---------- Interaction ---------- */
+
+.waveZone {
+  position: absolute;
+  inset-inline: 0;
+  top: var(--stands-top);
+  height: var(--stands-height);
+  z-index: 5;
+}
+
+.waveZone:focus-visible {
+  outline-offset: -6px;
+}
+
+/* Sticker bubble over the left of the stands, tail pointing into the crowd. */
+.crowdSticker {
+  position: absolute;
+  z-index: 6;
+  left: max(var(--gutter), 6%);
+  top: calc(var(--stands-top) + var(--stands-height) * 0.28);
+  pointer-events: none;
+  transform-origin: 30% 100%;
+}
+
+.crowdStickerBody {
+  position: relative;
+  display: block;
+  padding: 10px 18px 11px;
+  border-radius: 18px;
+  background: var(--ball);
+  color: #111a00;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(18px, 1.8vw, 26px);
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow:
+    0 10px 26px rgb(0 0 0 / 0.35),
+    inset 0 -3px 0 rgb(0 0 0 / 0.12);
+  animation: sticker-bob 2.6s ease-in-out infinite;
+}
+
+.crowdStickerBody::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  bottom: -9px;
+  border-width: 10px 4px 0 12px;
+  border-style: solid;
+  border-color: var(--ball) transparent transparent transparent;
+}
+
+@keyframes sticker-bob {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.heroBall {
+  position: absolute;
+  right: 22%;
+  bottom: 16%;
+  z-index: 7;
+  width: clamp(46px, 5vw, 72px);
+  touch-action: none;
+  cursor: grab;
+}
+
+.heroBall:active {
+  cursor: grabbing;
+}
+
+.heroBallBody {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.heroBallShadow {
+  position: absolute;
+  inset: auto 8% -14px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--shadow);
+  filter: blur(4px);
+}
+
+/* ---------- Broadcast caption ---------- */
+
+.overlay {
+  position: absolute;
+  inset: auto var(--gutter) clamp(28px, 6vh, 64px);
+  z-index: 8;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  pointer-events: none;
+}
+
+.caption {
+  display: grid;
+  justify-items: start;
+  pointer-events: auto;
+}
+
+.nameBar {
+  box-shadow: 0 18px 40px var(--shadow-soft);
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.25em;
+  padding: 10px 20px 5px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(28px, 3vw, 48px);
+  line-height: 0.95;
+}
+
+.firstName {
+  color: color-mix(in srgb, var(--bg) 55%, var(--ink));
+}
+
+.roleBar {
+  padding: 7px 20px;
+  background: var(--ball);
+  color: #111a00;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.fade {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  background: var(--bg);
+  pointer-events: none;
+}
+
+@media (max-width: 820px) {
+  .nameBar {
+    padding: 8px 14px 4px;
+  }
+
+  .roleBar {
+    padding-inline: 14px;
+  }
+
+  .heroBall {
+    right: 12%;
+    bottom: auto;
+    top: 61%;
+  }
+}

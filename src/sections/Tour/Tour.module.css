@@ -1,0 +1,417 @@
+.section {
+  position: relative;
+  min-height: 100svh;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      120% 80% at 50% 110%,
+      color-mix(in srgb, var(--court) 22%, transparent),
+      transparent 60%
+    ),
+    var(--bg);
+}
+
+/* ---------- Parallax planes ---------- */
+
+.courtLayer {
+  will-change: transform;
+  position: absolute;
+  top: 10%;
+  bottom: 14%;
+  left: 0;
+  display: flex;
+  gap: 8vw;
+  padding-left: 30vw;
+  pointer-events: none;
+}
+
+.courtOutline {
+  height: 100%;
+  width: auto;
+  stroke: var(--line);
+}
+
+.years {
+  will-change: transform;
+  position: absolute;
+  bottom: 6svh;
+  left: 0;
+  display: flex;
+  gap: 28vw;
+  padding-left: 70vw;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: min(44svh, 40vw);
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--line-strong);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.foreground {
+  will-change: transform;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.floatBall {
+  position: absolute;
+  filter: blur(6px);
+  opacity: 0.8;
+}
+
+.floatBall:nth-child(1) {
+  width: 90px;
+  top: -34px;
+  left: 120vw;
+}
+
+.floatBall:nth-child(2) {
+  width: 140px;
+  bottom: -40px;
+  left: 260vw;
+  filter: blur(10px);
+}
+
+.floatBall:nth-child(3) {
+  width: 70px;
+  bottom: 9svh;
+  left: 420vw;
+}
+
+/* ---------- Track ---------- */
+
+.track {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: flex;
+  align-items: center;
+  width: max-content;
+  padding: 0 max(var(--gutter), 8vw) 0 var(--gutter);
+  will-change: transform;
+  perspective: 1400px;
+}
+
+.intro {
+  width: min(560px, 86vw);
+  flex-shrink: 0;
+  margin-right: 8vw;
+}
+
+.card {
+  position: relative;
+  flex-shrink: 0;
+  width: min(420px, 84vw);
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--card-strong);
+  box-shadow:
+    0 30px 80px var(--shadow-soft),
+    inset 0 0 0 1px var(--line);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.high {
+  margin-top: -12svh;
+}
+
+.low {
+  margin-top: 12svh;
+}
+
+.card[data-live='true'] {
+  box-shadow:
+    0 30px 90px color-mix(in srgb, var(--ball) 18%, transparent),
+    inset 0 0 0 2px var(--ball);
+}
+
+.glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: soft-light;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 22px;
+  background: var(--board);
+  color: var(--board-ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.round {
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--ball);
+  color: #111a00;
+  font-weight: 800;
+}
+
+.cardBody {
+  display: grid;
+  gap: 10px;
+  padding: 22px 22px 18px;
+}
+
+.company {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(40px, 4.2vw, 56px);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.location {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.role {
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.commentary {
+  margin: 4px 0 0;
+  padding-left: 14px;
+  border-left: 3px solid var(--clay);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink);
+}
+
+.highlights {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.highlights li {
+  position: relative;
+  padding-left: 16px;
+}
+
+.highlights li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ball);
+  box-shadow: 0 0 0 1px var(--ball-shade);
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.stack li {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding: 12px 22px;
+  border-top: 1px dashed var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.statusAdvanced {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+}
+
+.statusLive {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--live);
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--live);
+  animation: live 1.2s ease-in-out infinite;
+}
+
+@keyframes live {
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--live) 0%, transparent);
+    opacity: 0.4;
+  }
+}
+
+.matchNumber {
+  color: var(--ink-faint);
+}
+
+/* ---------- Bracket links ---------- */
+
+.link {
+  position: relative;
+  flex-shrink: 0;
+  align-self: stretch;
+  width: clamp(60px, 9vw, 140px);
+}
+
+.link svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.linkGhost,
+.linkLine {
+  fill: none;
+  stroke-width: 2;
+}
+
+.linkGhost {
+  stroke: var(--line);
+  stroke-dasharray: 4 6;
+}
+
+.linkLine {
+  stroke: var(--ball);
+}
+
+.linkBall {
+  position: absolute;
+  right: -7px;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: var(--ball);
+  box-shadow: 0 0 16px var(--ball);
+}
+
+/* ---------- Progress rail ---------- */
+
+.rail {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(18px, 4svh, 36px);
+  display: grid;
+  gap: 10px;
+}
+
+.railTrack {
+  position: relative;
+  height: 2px;
+  background: var(--line);
+}
+
+.railFill {
+  position: absolute;
+  inset: 0;
+  background: var(--ball);
+  transform-origin: 0 50%;
+}
+
+.railBall {
+  will-change: transform;
+  position: absolute;
+  top: -8px;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+}
+
+.railRounds {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 720px) {
+  .high,
+  .low {
+    margin-top: 0;
+  }
+
+  .link svg path {
+    d: path('M0 50 H100');
+  }
+
+  .linkBall {
+    top: 50% !important;
+  }
+}
+
+/* Blurred balls moving across the screen are costly on phones and barely register there. */
+@media (hover: none), (pointer: coarse) {
+  .foreground {
+    display: none;
+  }
+
+  /* The intro sits mid-screen, so on a phone the tour slides up over the hero's fade-out instead
+     of leaving a blank screen between them. Its backdrop keeps only the glow (the page behind is
+     the same colour), so the fading court shows through the overlap. */
+  .section {
+    margin-top: -40svh;
+  }
+
+  .stage {
+    background: radial-gradient(
+      120% 80% at 50% 110%,
+      color-mix(in srgb, var(--court) 22%, transparent),
+      transparent 60%
+    );
+  }
+}

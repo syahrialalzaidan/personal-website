@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" data-theme="night">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Syahrial Alzaidan — Live from Center Court</title>
+    <meta
+      name="description"
+      content="Portfolio of Mochamad Syahrial Alzaidan — software engineer at GoTo, building GoFood backends and AI agents that remember."
+    />
+    <meta name="theme-color" content="#060d1a" />
+    <meta property="og:title" content="Syahrial Alzaidan — Live from Center Court" />
+    <meta
+      property="og:description"
+      content="Software engineer. Backend at scale, AI agents with memory, and a lot of tennis."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      // Resolve the theme before first paint so there is no flash of the wrong session. Everyone
+      // starts under the floodlights; only a session the visitor picked themselves overrides it.
+      ;(function () {
+        var theme = 'night'
+        try {
+          var stored = localStorage.getItem('court-theme')
+          if (stored === 'day' || stored === 'night') theme = stored
+        } catch (_) {}
+        document.documentElement.dataset.theme = theme
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

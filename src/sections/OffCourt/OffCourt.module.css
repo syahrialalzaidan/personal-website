@@ -1,0 +1,243 @@
+.section {
+  position: relative;
+  padding: clamp(96px, 14vh, 160px) 0 clamp(40px, 8vh, 100px);
+}
+
+.inner {
+  width: min(var(--content-max), 100% - var(--gutter) * 2);
+  margin-inline: auto;
+}
+
+.stack {
+  display: grid;
+  gap: clamp(40px, 10vh, 120px);
+  margin-top: clamp(40px, 8vh, 80px);
+  padding-bottom: 6vh;
+}
+
+/* ---------- Card ---------- */
+
+.card {
+  --sport: #1f56ab;
+  position: sticky;
+  top: calc(90px + var(--stack-top));
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr);
+  gap: clamp(20px, 3vw, 48px);
+  align-items: center;
+  min-height: min(620px, calc(100svh - 150px));
+  padding: clamp(22px, 3.2vw, 44px);
+  border-radius: 32px;
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgb(255 255 255 / 0.14), transparent 50%),
+    linear-gradient(
+      140deg,
+      color-mix(in srgb, var(--sport) 92%, #000),
+      color-mix(in srgb, var(--sport) 58%, #000)
+    );
+  box-shadow:
+    0 -10px 40px rgb(0 0 0 / 0.18),
+    0 40px 90px var(--shadow-soft),
+    inset 0 0 0 1px rgb(255 255 255 / 0.12);
+  transform-origin: 50% 0;
+  /*
+   * Cards shrink as the next one slides over. Keeping each on its own compositor layer lets the
+   * GPU scale the existing picture instead of repainting a full-width card every scroll frame,
+   * which is what showed up as grey flashes mid-transition.
+   */
+  will-change: transform;
+  contain: paint;
+}
+
+.card[data-sport='tennis'] {
+  --sport: var(--court);
+}
+
+.card[data-sport='padel'] {
+  --sport: #2d74c4;
+}
+
+.card[data-sport='ping-pong'] {
+  --sport: #b3303b;
+}
+
+.card[data-sport='golf'] {
+  --sport: #3f8a3a;
+}
+
+:root[data-theme='night'] .card {
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgb(255 255 255 / 0.1), transparent 50%),
+    linear-gradient(
+      140deg,
+      color-mix(in srgb, var(--sport) 70%, #000),
+      color-mix(in srgb, var(--sport) 38%, #000)
+    );
+}
+
+.bigName {
+  position: absolute;
+  right: -2%;
+  bottom: -6%;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(120px, 16vw, 260px);
+  line-height: 0.8;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(255 255 255 / 0.1);
+  pointer-events: none;
+}
+
+.info {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  align-content: center;
+}
+
+.number {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: rgb(255 255 255 / 0.6);
+}
+
+.number span {
+  color: #fff;
+  font-weight: 700;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(56px, 7vw, 112px);
+  line-height: 0.82;
+  text-transform: uppercase;
+}
+
+.level {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.levelLabel {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--ball);
+  color: #111a00;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.meter {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 22px;
+}
+
+.meter span {
+  width: 5px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.2);
+}
+
+.meter span[data-on='true'] {
+  background: var(--ball);
+}
+
+.line {
+  max-width: 420px;
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.45;
+}
+
+.how {
+  display: grid;
+  gap: 4px;
+  max-width: 420px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgb(0 0 0 / 0.22);
+  font-size: 14px;
+  color: rgb(255 255 255 / 0.85);
+}
+
+.how span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ball);
+}
+
+.gameFrame {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgb(0 0 0 / 0.28);
+  /* Holding to charge a shot must never start a text selection or the iOS press-and-hold menu. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.14),
+    0 24px 50px rgb(0 0 0 / 0.3);
+}
+
+.gameLoading {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.6);
+}
+
+.gameCanvas {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  cursor: crosshair;
+}
+
+.gameCanvas:focus-visible {
+  box-shadow: inset 0 0 0 3px var(--ball);
+}
+
+.dim {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+@media (max-width: 900px) {
+  .card {
+    grid-template-columns: 1fr;
+    top: calc(76px + var(--stack-top) / 2);
+    min-height: 0;
+    border-radius: 24px;
+  }
+
+  .name {
+    font-size: clamp(48px, 14vw, 80px);
+  }
+
+  .how {
+    display: none;
+  }
+}

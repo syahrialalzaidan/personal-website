@@ -1,0 +1,69 @@
+.intro {
+  display: grid;
+  gap: 18px;
+  max-width: 760px;
+}
+
+.center {
+  margin-inline: auto;
+  text-align: center;
+  justify-items: center;
+}
+
+.chyron {
+  display: inline-flex;
+  align-items: stretch;
+  width: fit-content;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--card-strong);
+}
+
+.chyron > span {
+  padding: 6px 14px;
+}
+
+.segment {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 700;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(56px, 10vw, 148px);
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.22em;
+}
+
+.center .title {
+  justify-content: center;
+}
+
+.mask {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.word {
+  display: inline-block;
+  transform-origin: 0 100%;
+}
+
+.lede {
+  max-width: 560px;
+  font-size: clamp(17px, 1.5vw, 20px);
+  color: var(--ink-soft);
+}

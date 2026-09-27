@@ -1,0 +1,146 @@
+/*
+ * Design tokens.
+ * Two "sessions" share one vocabulary: `night` (floodlit hard court) and `day` (sunlit clay).
+ * Every illustration, canvas game and component reads from these, so a scene is drawn once.
+ */
+
+:root {
+  --font-display: 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif;
+  --font-body: 'Inter Tight Variable', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --gutter: clamp(16px, 4.5vw, 64px);
+  --content-max: 1240px;
+  --radius-sm: 8px;
+  --radius: 16px;
+  --radius-lg: 28px;
+
+  --z-grain: 60;
+  --z-hud: 70;
+  --z-toast: 80;
+  --z-loader: 90;
+  --z-cursor: 100;
+}
+
+:root,
+:root[data-theme='night'] {
+  color-scheme: dark;
+
+  --bg: #060d1a;
+  --bg-raised: #0d1b33;
+  --bg-sunken: #030811;
+  --card: rgb(13 27 51 / 0.72);
+  --card-strong: rgb(16 34 64 / 0.92);
+
+  --ink: #eef3ff;
+  --ink-soft: #b4c2dd;
+  --ink-faint: #7285a6;
+  --line: rgb(238 243 255 / 0.12);
+  --line-strong: rgb(238 243 255 / 0.28);
+
+  --accent: #d8ff3e;
+  --on-accent: #111a00;
+  --clay: #ff7d4a;
+  --live: #ff3b4f;
+  --gold: #f4c55b;
+  --silver: #c9d3e3;
+  --bronze: #d38b58;
+
+  --ball: #d8ff3e;
+  --ball-light: #f3ffb0;
+  --ball-shade: #8eaa14;
+  --ball-seam: #f8ffe6;
+
+  --court: #1f56ab;
+  --court-deep: #173f80;
+  --court-apron: #11305f;
+  --court-line: #f4f7ff;
+  --net: #0b1426;
+  --net-tape: #f4f7ff;
+
+  --sky-top: #01040b;
+  --sky-mid: #081733;
+  --sky-low: #183563;
+  --haze: rgb(120 160 230 / 0.12);
+  --stand-back: #0a1730;
+  --stand-front: #0e1f3f;
+  --wall: #0b1c3a;
+  --wall-ink: #d8ff3e;
+
+  --light: rgb(255 246 222);
+  --light-glow: rgb(255 240 205 / 0.55);
+  --beam: rgb(255 246 222 / 0.09);
+  --shadow: rgb(0 0 0 / 0.55);
+  --shadow-soft: rgb(0 0 0 / 0.3);
+
+  --board: #03070f;
+  --board-ink: #ffb21e;
+  --board-dim: rgb(255 178 30 / 0.16);
+
+  --sheen: rgb(255 255 255 / 0.14);
+  --spot: rgb(255 238 200 / 0.2);
+  --grain-opacity: 0.07;
+}
+
+:root[data-theme='day'] {
+  color-scheme: light;
+
+  --bg: #f4ecdf;
+  --bg-raised: #fffaf1;
+  --bg-sunken: #e8dccb;
+  --card: rgb(255 250 241 / 0.78);
+  --card-strong: rgb(255 251 244 / 0.95);
+
+  --ink: #13213a;
+  --ink-soft: #435069;
+  --ink-faint: #7c8598;
+  --line: rgb(19 33 58 / 0.12);
+  --line-strong: rgb(19 33 58 / 0.3);
+
+  --accent: #3d6a00;
+  --on-accent: #fbffe8;
+  --clay: #c2512a;
+  --live: #d9263a;
+  --gold: #c8941d;
+  --silver: #8d99ad;
+  --bronze: #a8612f;
+
+  --ball: #d4f53a;
+  --ball-light: #f6ffc2;
+  --ball-shade: #93b019;
+  --ball-seam: #fbffe8;
+
+  --court: #c9653b;
+  --court-deep: #b25430;
+  --court-apron: #9f4a2a;
+  --court-line: #fff8ef;
+  --net: #1b2335;
+  --net-tape: #fffaf1;
+
+  --sky-top: #6aa8e8;
+  --sky-mid: #a9d0f3;
+  --sky-low: #fbe4c3;
+  --haze: rgb(255 236 200 / 0.4);
+  --stand-back: #e2d3bd;
+  --stand-front: #d6c3a7;
+  --wall: #1f4a33;
+  --wall-ink: #fbf3e2;
+
+  --light: rgb(255 244 214);
+  --light-glow: rgb(255 226 160 / 0.6);
+  --beam: rgb(255 238 196 / 0.28);
+  --shadow: rgb(80 34 12 / 0.32);
+  --shadow-soft: rgb(80 34 12 / 0.16);
+
+  --board: #1d3a2a;
+  --board-ink: #fdf8ec;
+  --board-dim: rgb(253 248 236 / 0.14);
+
+  --sheen: rgb(255 255 255 / 0.55);
+  --spot: rgb(255 250 232 / 0.75);
+  --grain-opacity: 0.05;
+}
