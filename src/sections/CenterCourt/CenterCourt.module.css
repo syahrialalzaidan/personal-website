@@ -118,64 +118,17 @@
   outline-offset: -6px;
 }
 
-/* Sticker bubble over the left of the stands, tail pointing into the crowd. */
+/* Sticker over the left of the stands, tail pointing into the crowd. */
 .crowdSticker {
-  position: absolute;
   z-index: 6;
   left: max(var(--gutter), 6%);
   top: calc(var(--stands-top) + var(--stands-height) * 0.28);
-  pointer-events: none;
-  transform-origin: 30% 100%;
-}
-
-/* A hand-stuck label pointing at something you can play with. */
-.stickerBody {
-  position: relative;
-  display: block;
-  padding: 10px 18px 11px;
-  border-radius: 18px;
-  background: var(--ball);
-  color: #111a00;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(18px, 1.8vw, 26px);
-  line-height: 1;
-  white-space: nowrap;
-  box-shadow:
-    0 10px 26px rgb(0 0 0 / 0.35),
-    inset 0 -3px 0 rgb(0 0 0 / 0.12);
-  animation: sticker-bob 2.6s ease-in-out infinite;
-}
-
-.stickerBody::after {
-  content: '';
-  position: absolute;
-  right: 18px;
-  bottom: -9px;
-  border-width: 10px 4px 0 12px;
-  border-style: solid;
-  border-color: var(--ball) transparent transparent transparent;
 }
 
 /* Rides along with the hero ball, off to its left so the bounce never runs into it. */
 .ballSticker {
-  position: absolute;
   right: calc(100% + 6px);
   bottom: 150%;
-  pointer-events: none;
-  transform-origin: 100% 100%;
-}
-
-.ballSticker .stickerBody {
-  font-size: clamp(15px, 1.4vw, 20px);
-  padding: 8px 14px 9px;
-  border-radius: 15px;
-}
-
-@keyframes sticker-bob {
-  50% {
-    transform: translateY(-4px);
-  }
 }
 
 /* The ball keeps bouncing ~90px above wherever it lands, so the top edge sits that far below the

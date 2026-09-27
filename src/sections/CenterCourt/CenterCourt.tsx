@@ -1,5 +1,4 @@
 import {
-  AnimatePresence,
   motion,
   useInView,
   useMotionValue,
@@ -10,6 +9,7 @@ import {
 } from 'motion/react'
 import { useRef, useState, type CSSProperties } from 'react'
 import { useSound } from '../../audio/useSound'
+import { Sticker } from '../../components/Sticker/Sticker'
 import { profile } from '../../content/profile'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { clamp } from '../../lib/math'
@@ -122,24 +122,16 @@ export function CenterCourt({ ready }: CenterCourtProps) {
           data-cursor-plain
         />
 
-        {/* A sticker-style hint pinned over the stands; clicks pass through to the crowd. It only
-            needs to land once, so it leaves for good after the first wave. */}
-        <AnimatePresence>
-          {waveKey === 0 && (
-            <motion.div
-              key="crowd-hint"
-              className={styles.crowdSticker}
-              style={{ opacity: overlayOpacity }}
-              initial={{ scale: 0, rotate: -24 }}
-              animate={ready ? { scale: 1, rotate: -8 } : { scale: 0, rotate: -24 }}
-              exit={{ scale: 0, rotate: -24, transition: { duration: 0.2, ease: 'easeIn' } }}
-              transition={{ type: 'spring', stiffness: 380, damping: 18, delay: ready ? 1.2 : 0 }}
-              aria-hidden="true"
-            >
-              <span className={styles.stickerBody}>Tap me</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Points at the tappable crowd until the first wave; clicks pass through it. */}
+        <Sticker
+          show={ready && waveKey === 0}
+          rotate={-8}
+          delay={1.2}
+          className={styles.crowdSticker}
+          style={{ opacity: overlayOpacity }}
+        >
+          Tap me
+        </Sticker>
 
         {/* Where the ball may be thrown: clear of the scoreboard, and on phones of the caption too. */}
         <div ref={ballBoundsRef} className={styles.ballBounds} aria-hidden="true" />

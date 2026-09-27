@@ -1,5 +1,6 @@
 import { motion, useAnimationControls } from 'motion/react'
 import { useSound } from '../../audio/useSound'
+import { Sticker } from '../../components/Sticker/Sticker'
 import type { Trophy } from '../../content/types'
 import { useTilt } from '../../hooks/useTilt'
 import { fadeUp } from '../../lib/motion'
@@ -8,16 +9,20 @@ import styles from './TrophyRoom.module.css'
 
 interface TrophyItemProps {
   trophy: Trophy
+  /** Shows the "Lift me" sticker on this trophy. */
+  hint?: boolean
+  onLift?: () => void
 }
 
 /** A trophy on the shelf with its engraved plaque. Click to lift it overhead. */
-export function TrophyItem({ trophy }: TrophyItemProps) {
+export function TrophyItem({ trophy, hint = false, onLift }: TrophyItemProps) {
   const tilt = useTilt(16)
   const lift = useAnimationControls()
   const { play } = useSound()
 
   const celebrate = () => {
     play('cup')
+    onLift?.()
     void lift.start({
       y: [0, -46, -40, 0],
       rotate: [0, -6, 6, 0],
@@ -42,6 +47,9 @@ export function TrophyItem({ trophy }: TrophyItemProps) {
         </motion.span>
         <span className={styles.trophyShadow} aria-hidden="true" />
       </motion.button>
+      <Sticker show={hint} rotate={6} delay={0.9} tail="left" className={styles.liftSticker}>
+        Lift me
+      </Sticker>
       <span className={styles.plank} aria-hidden="true" />
 
       <div className={styles.plaque}>

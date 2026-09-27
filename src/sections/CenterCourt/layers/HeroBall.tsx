@@ -1,12 +1,7 @@
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-  type MotionValue,
-  type Transition,
-} from 'motion/react'
+import { motion, useReducedMotion, type MotionValue, type Transition } from 'motion/react'
 import { useState, type RefObject } from 'react'
 import { useSound } from '../../../audio/useSound'
+import { Sticker } from '../../../components/Sticker/Sticker'
 import { TennisBall } from '../../../components/TennisBall/TennisBall'
 import styles from '../CenterCourt.module.css'
 
@@ -51,22 +46,16 @@ export function HeroBall({ constraintsRef, active, ready, hintOpacity }: HeroBal
       role="img"
       aria-label="A tennis ball. Drag and throw it."
     >
-      <AnimatePresence>
-        {!played && (
-          <motion.div
-            key="hint"
-            className={styles.ballSticker}
-            style={{ opacity: hintOpacity }}
-            initial={{ scale: 0, rotate: 20 }}
-            animate={ready ? { scale: 1, rotate: 7 } : { scale: 0, rotate: 20 }}
-            exit={{ scale: 0, rotate: 20, transition: { duration: 0.2, ease: 'easeIn' } }}
-            transition={{ type: 'spring', stiffness: 380, damping: 18, delay: ready ? 1.6 : 0 }}
-            aria-hidden="true"
-          >
-            <span className={styles.stickerBody}>Throw me</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Sticker
+        show={ready && !played}
+        rotate={7}
+        delay={1.6}
+        size="small"
+        className={styles.ballSticker}
+        style={{ opacity: hintOpacity }}
+      >
+        Throw me
+      </Sticker>
       <motion.div
         className={styles.heroBallBody}
         animate={bouncing ? { y: [0, -90, 0] } : { y: 0 }}

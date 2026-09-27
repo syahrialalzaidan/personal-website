@@ -1,12 +1,13 @@
 import {
   motion,
+  useInView,
   useMotionTemplate,
   useMotionValue,
   useScroll,
   useSpring,
   useTransform,
 } from 'motion/react'
-import { useRef, type PointerEvent } from 'react'
+import { useRef, useState, type PointerEvent } from 'react'
 import { SectionIntro } from '../../components/SectionIntro/SectionIntro'
 import { trophies } from '../../content/achievements'
 import { revealOnView, stagger } from '../../lib/motion'
@@ -16,6 +17,10 @@ import styles from './TrophyRoom.module.css'
 /** Hackathon honors in a lit cabinet. A spotlight follows the pointer across the back wall. */
 export function TrophyRoom() {
   const sectionRef = useRef<HTMLElement>(null)
+  const shelfRef = useRef<HTMLUListElement>(null)
+  // "Lift me" waits for the shelf to come into view, then leaves once any trophy is lifted.
+  const shelfSeen = useInView(shelfRef, { once: true, amount: 0.4 })
+  const [lifted, setLifted] = useState(false)
   const spotX = useSpring(useMotionValue(50), { stiffness: 120, damping: 20 })
   const spotY = useSpring(useMotionValue(40), { stiffness: 120, damping: 20 })
   const spotlight = useMotionTemplate`radial-gradient(460px circle at ${spotX}% ${spotY}%, var(--spot) 0%, transparent 70%)`
@@ -69,13 +74,19 @@ export function TrophyRoom() {
           />
 
           <motion.ul
+            ref={shelfRef}
             className={styles.shelf}
             style={{ y: shelfY }}
             {...revealOnView}
             variants={stagger(0.12)}
           >
-            {trophies.map((trophy) => (
-              <TrophyItem key={trophy.id} trophy={trophy} />
+            {trophies.map((trophy, index) => (
+              <TrophyItem
+                key={trophy.id}
+                trophy={trophy}
+                hint={index === 0 && shelfSeen && !lifted}
+                onLift={() => setLifted(true)}
+              />
             ))}
           </motion.ul>
         </div>
