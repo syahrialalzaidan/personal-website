@@ -14,7 +14,7 @@ export const sports: Sport[] = [
     name: 'Padel',
     level: 'High bronze',
     rating: 0.62,
-    line: 'still trying to get better, and getting used to the glass hehe',
+    line: 'still trying to get better and getting used to the glass hehe',
     howToPlay: 'Click anywhere to smash the ball. Chain bounces off the glass.',
   },
   {
