@@ -55,7 +55,7 @@ export function Tour() {
             headingId="tour-title"
             segment="02"
             eyebrow="The tour"
-            title="Six rounds, one draw"
+            title="Five rounds, one draw"
             lede="Every team I've played for, starting with the final that's still in play and working back to the opening round. Keep scrolling and the draw moves sideways."
           />
 

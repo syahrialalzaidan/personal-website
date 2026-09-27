@@ -116,20 +116,10 @@ export function Walkout({ onDone }: WalkoutProps) {
 
         <p className={styles.matchup}>
           <strong>{profile.nickname}</strong>
-          <span>vs</span>
-          <strong>the next big problem</strong>
+          <span>and</span>
+          <strong>his joyful life</strong>
         </p>
       </motion.div>
-
-      <motion.button
-        type="button"
-        className={styles.skip}
-        onClick={onDone}
-        data-cursor="Skip"
-        exit={{ opacity: 0 }}
-      >
-        Skip intro
-      </motion.button>
     </motion.div>
   )
 }

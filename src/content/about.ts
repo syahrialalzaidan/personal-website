@@ -5,7 +5,7 @@ export const overview = [
 
 export const stats = [
   { value: 3.68, decimals: 2, suffix: '', label: 'GPA at ITB' },
-  { value: 6, decimals: 0, suffix: '', label: 'Teams shipped with' },
+  { value: 5, decimals: 0, suffix: '', label: 'Teams shipped with' },
   { value: 4, decimals: 0, suffix: '', label: 'Hackathon honors' },
   { value: 2, decimals: 0, suffix: '+', label: 'Years in production' },
 ] as const

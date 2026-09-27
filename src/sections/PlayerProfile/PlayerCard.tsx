@@ -42,11 +42,11 @@ export function PlayerCard() {
           </div>
           <div>
             <dt>Forehand</dt>
-            <dd>Go · Clojure</dd>
+            <dd>Typescript</dd>
           </div>
           <div>
             <dt>Backhand</dt>
-            <dd>TypeScript</dd>
+            <dd>Go · Clojure</dd>
           </div>
           <div>
             <dt>Trained at</dt>

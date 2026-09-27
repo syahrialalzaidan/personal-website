@@ -22,6 +22,11 @@ class SoundEngine {
     return this.context
   }
 
+  /** Creates or resumes the audio context; call from a user gesture so later sounds can play. */
+  unlock() {
+    this.ensureContext()
+  }
+
   private createNoise(context: AudioContext): AudioBuffer {
     const buffer = context.createBuffer(1, context.sampleRate * 2, context.sampleRate)
     const data = buffer.getChannelData(0)

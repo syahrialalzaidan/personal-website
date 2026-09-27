@@ -1,4 +1,5 @@
 import {
+  AnimatePresence,
   motion,
   useInView,
   useMotionValue,
@@ -42,6 +43,7 @@ const wipe: Variants = {
 export function CenterCourt({ ready }: CenterCourtProps) {
   const sectionRef = useRef<HTMLElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
+  const ballBoundsRef = useRef<HTMLDivElement>(null)
   const portrait = useMediaQuery('(max-aspect-ratio: 1/1)')
   // Mobile Safari re-draws a layer every time its scale changes, so on touch the camera doesn't
   // zoom at all: planes only slide at different speeds, which the GPU can do for free.
@@ -120,19 +122,33 @@ export function CenterCourt({ ready }: CenterCourtProps) {
           data-cursor-plain
         />
 
-        {/* A sticker-style hint pinned over the stands; clicks pass through to the crowd. */}
-        <motion.div
-          className={styles.crowdSticker}
-          style={{ opacity: overlayOpacity }}
-          initial={{ scale: 0, rotate: -24 }}
-          animate={ready ? { scale: 1, rotate: -8 } : { scale: 0, rotate: -24 }}
-          transition={{ type: 'spring', stiffness: 380, damping: 18, delay: ready ? 1.2 : 0 }}
-          aria-hidden="true"
-        >
-          <span className={styles.crowdStickerBody}>Tap me</span>
-        </motion.div>
+        {/* A sticker-style hint pinned over the stands; clicks pass through to the crowd. It only
+            needs to land once, so it leaves for good after the first wave. */}
+        <AnimatePresence>
+          {waveKey === 0 && (
+            <motion.div
+              key="crowd-hint"
+              className={styles.crowdSticker}
+              style={{ opacity: overlayOpacity }}
+              initial={{ scale: 0, rotate: -24 }}
+              animate={ready ? { scale: 1, rotate: -8 } : { scale: 0, rotate: -24 }}
+              exit={{ scale: 0, rotate: -24, transition: { duration: 0.2, ease: 'easeIn' } }}
+              transition={{ type: 'spring', stiffness: 380, damping: 18, delay: ready ? 1.2 : 0 }}
+              aria-hidden="true"
+            >
+              <span className={styles.stickerBody}>Tap me</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        <HeroBall constraintsRef={stageRef} active={nearby} />
+        {/* Where the ball may be thrown: clear of the scoreboard, and on phones of the caption too. */}
+        <div ref={ballBoundsRef} className={styles.ballBounds} aria-hidden="true" />
+        <HeroBall
+          constraintsRef={ballBoundsRef}
+          active={nearby}
+          ready={ready}
+          hintOpacity={overlayOpacity}
+        />
 
         <motion.div className={styles.overlay} style={{ opacity: overlayOpacity, y: overlayY }}>
           <motion.div
