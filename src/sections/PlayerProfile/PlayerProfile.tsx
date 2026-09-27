@@ -46,9 +46,13 @@ export function PlayerProfile() {
               {stats.map((stat) => (
                 <div key={stat.label} className={styles.stat}>
                   <dt>{stat.label}</dt>
-                  <dd>
-                    <CountUp value={stat.value} decimals={stat.decimals} suffix={stat.suffix} />
-                  </dd>
+                  {'text' in stat ? (
+                    <dd className={styles.statText}>{stat.text}</dd>
+                  ) : (
+                    <dd>
+                      <CountUp value={stat.value} decimals={stat.decimals} suffix={stat.suffix} />
+                    </dd>
+                  )}
                 </div>
               ))}
             </motion.dl>
@@ -80,7 +84,7 @@ export function PlayerProfile() {
                 <p className={styles.muted}>{education.degree}</p>
                 <ul className={styles.tags}>
                   <li>{education.period}</li>
-                  <li>GPA {education.gpa}</li>
+                  <li>{education.honors}</li>
                   <li>{education.credits}</li>
                 </ul>
               </section>

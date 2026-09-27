@@ -233,6 +233,14 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Words run wider than digits, so a text stat sits a size down to fit the same tile. */
+.stat .statText {
+  font-size: clamp(28px, 2.6vw, 40px);
+  line-height: 0.95;
+  font-variant-numeric: normal;
+  align-self: end;
+}
+
 .block {
   display: grid;
   gap: 12px;

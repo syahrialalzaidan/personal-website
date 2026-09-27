@@ -3,8 +3,9 @@ export const overview = [
   'Right now I build GoFood backend services at GoTo. Before that I spent a year on agentic AI infrastructure — memory, retrieval, orchestration — for an AI agents marketplace.',
 ]
 
+/** Headline numbers count up on reveal; a `text` stat shows as-is instead. */
 export const stats = [
-  { value: 3.68, decimals: 2, suffix: '', label: 'GPA at ITB' },
+  { text: 'Cum laude', label: 'Graduated ITB' },
   { value: 5, decimals: 0, suffix: '', label: 'Teams shipped with' },
   { value: 4, decimals: 0, suffix: '', label: 'Hackathon honors' },
   { value: 2, decimals: 0, suffix: '+', label: 'Years in production' },
@@ -22,7 +23,7 @@ export const education = {
   school: 'Institut Teknologi Bandung',
   degree: 'B.Sc. Information Systems and Technology',
   period: '2021 — 2025',
-  gpa: '3.68 / 4.00',
+  honors: 'Cum laude',
   credits: '152 credits',
 }
 
