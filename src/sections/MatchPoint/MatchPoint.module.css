@@ -234,18 +234,24 @@
 .toast {
   position: fixed;
   left: 50%;
-  bottom: 28px;
+  bottom: calc(28px + env(safe-area-inset-bottom));
   z-index: var(--z-toast);
   translate: -50% 0;
+  /* One line where it fits; on a phone it wraps inside the screen instead of running off it. */
+  width: max-content;
+  max-width: calc(100vw - var(--gutter) * 2);
   padding: 12px 18px;
-  border-radius: 999px;
+  border-radius: 22px;
   background: var(--board);
   color: var(--board-ink);
   font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
   box-shadow: 0 16px 40px var(--shadow);
-  white-space: nowrap;
 }
 
 @media (max-width: 640px) {
