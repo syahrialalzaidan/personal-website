@@ -19,7 +19,7 @@ import { Floor } from './layers/Floor'
 import { HeroBall } from './layers/HeroBall'
 import { Sky } from './layers/Sky'
 import { Wall } from './layers/Wall'
-import { ParallaxLayer, StillLayer } from './ParallaxLayer'
+import { ParallaxLayer, PlainLayer } from './ParallaxLayer'
 import { LANDSCAPE, PORTRAIT } from './stadium'
 import styles from './CenterCourt.module.css'
 
@@ -45,8 +45,8 @@ export function CenterCourt({ ready }: CenterCourtProps) {
   const stageRef = useRef<HTMLDivElement>(null)
   const ballBoundsRef = useRef<HTMLDivElement>(null)
   const portrait = useMediaQuery('(max-aspect-ratio: 1/1)')
-  // Phones get a still frame: no pinned scroll, no camera dolly and no scroll-linked fades. The
-  // stadium paints once and simply scrolls away, so nothing has to run while the page moves.
+  // Phones skip the pinned camera dolly: the hero scrolls away like any section while three
+  // planes drift at different speeds. That parallax is pure CSS, so no JS runs on scroll.
   const touch = useMediaQuery('(hover: none), (pointer: coarse)')
   // Once the hero is well off-screen its layers are dropped, freeing their GPU memory.
   const nearby = useInView(sectionRef, { margin: '50% 0px 50% 0px' })
@@ -89,13 +89,19 @@ export function CenterCourt({ ready }: CenterCourtProps) {
     >
       <div ref={stageRef} className={styles.stage} style={stageStyle} data-dormant={!nearby}>
         {touch ? (
-          <StillLayer>
-            <Sky layout={layout} />
-            <CrowdCanvas layout={layout} waveKey={waveKey} twinkle={false} />
-            <Wall layout={layout} />
-            <Floor layout={layout} />
-            <Beams layout={layout} />
-          </StillLayer>
+          <>
+            <PlainLayer className={styles.farPlane}>
+              <Sky layout={layout} />
+            </PlainLayer>
+            <PlainLayer className={styles.crowdPlane}>
+              <CrowdCanvas layout={layout} waveKey={waveKey} twinkle={false} />
+            </PlainLayer>
+            <PlainLayer className={styles.nearPlane}>
+              <Wall layout={layout} />
+              <Floor layout={layout} />
+              <Beams layout={layout} />
+            </PlainLayer>
+          </>
         ) : (
           <>
             <ParallaxLayer progress={progress} depth={-6} zoom={1.06}>

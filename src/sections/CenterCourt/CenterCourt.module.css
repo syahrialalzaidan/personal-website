@@ -3,11 +3,12 @@
   height: 220svh;
 }
 
-/* Phones get a still frame that scrolls away like any other section: nothing pins, nothing is
-   scroll-linked. A soft fade at the foot blends the court into the page below. */
+/* Phones: nothing pins. The hero scrolls away like any other section while its planes drift at
+   different speeds, and a soft fade at the foot blends the court into the page below. */
 @media (hover: none), (pointer: coarse) {
   .section {
     height: 100svh;
+    view-timeline: --hero block;
   }
 
   .stage::after {
@@ -23,6 +24,87 @@
   .layer {
     inset: 0;
     will-change: auto;
+  }
+}
+
+/*
+ * Phone parallax, driven by CSS scroll timelines: as the hero leaves the screen, further planes
+ * lag behind nearer ones and the caption sinks and fades. The browser runs these on the
+ * compositor, so scrolling never waits on JS. Without support the frame simply scrolls as one.
+ */
+@supports (animation-timeline: view()) {
+  @media ((hover: none) or (pointer: coarse)) and (prefers-reduced-motion: no-preference) {
+    .farPlane,
+    .crowdPlane,
+    .nearPlane,
+    .overlay,
+    .crowdSticker,
+    .ballSticker {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --hero;
+      animation-range: exit 0% exit 100%;
+    }
+
+    .farPlane,
+    .crowdPlane,
+    .nearPlane {
+      will-change: transform;
+    }
+
+    .farPlane {
+      animation-name: drift-far;
+    }
+
+    .crowdPlane {
+      animation-name: drift-crowd;
+    }
+
+    .nearPlane {
+      animation-name: drift-near;
+    }
+
+    .overlay {
+      animation-name: caption-sink;
+      animation-range: exit 0% exit 32%;
+    }
+
+    .crowdSticker,
+    .ballSticker {
+      animation-name: hint-fade;
+      animation-range: exit 0% exit 35%;
+    }
+  }
+}
+
+@keyframes drift-far {
+  to {
+    transform: translateY(42%);
+  }
+}
+
+@keyframes drift-crowd {
+  to {
+    transform: translateY(28%);
+  }
+}
+
+@keyframes drift-near {
+  to {
+    transform: translateY(12%);
+  }
+}
+
+@keyframes caption-sink {
+  to {
+    opacity: 0;
+    transform: translateY(70px);
+  }
+}
+
+@keyframes hint-fade {
+  to {
+    opacity: 0;
   }
 }
 

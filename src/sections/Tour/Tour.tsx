@@ -28,8 +28,8 @@ const INTRO = {
 } as const
 
 /**
- * Experience as a tournament draw. Phones get a plain vertical list that scrolls natively; the
- * pinned, sideways-scrubbing draw with its parallax planes is kept for larger screens.
+ * Experience as a tournament draw. Phones get a vertical list that scrolls natively, animated
+ * with CSS scroll timelines only; the pinned, sideways-scrubbing draw is kept for larger screens.
  */
 export function Tour() {
   const touch = useMediaQuery('(hover: none), (pointer: coarse)')
@@ -42,7 +42,16 @@ function TourList() {
       <SectionIntro {...INTRO} />
       <ol className={styles.list}>
         {matches.map((match, index) => (
-          <li key={match.id}>
+          <li key={match.id} className={styles.entry} data-side={index % 2 ? 'right' : 'left'}>
+            {index > 0 && (
+              <span className={styles.joint} aria-hidden="true">
+                <span className={styles.jointLine} />
+                <span className={styles.jointBall} />
+              </span>
+            )}
+            <span className={styles.yearMark} aria-hidden="true">
+              {match.year}
+            </span>
             <MatchCardFlat match={match} index={index} />
           </li>
         ))}

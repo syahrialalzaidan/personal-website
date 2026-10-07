@@ -398,30 +398,84 @@
 
 .listSection {
   display: grid;
-  gap: 40px;
+  gap: 96px;
   padding: 96px var(--gutter) 72px;
+  /* Cards slide in from the sides; clip that overhang without making a scroll container. */
+  overflow-x: clip;
 }
 
 .list {
   display: grid;
-  gap: 36px;
+  gap: 96px;
 }
 
-.list > li {
+.entry {
   position: relative;
+  view-timeline: --entry block;
 }
 
-/* A short dashed bracket line joins each round to the next. */
-.list > li + li::before {
-  content: '';
+.entry[data-side='left'] {
+  --from-x: -44px;
+  --from-turn: -3deg;
+}
+
+.entry[data-side='right'] {
+  --from-x: 44px;
+  --from-turn: 3deg;
+}
+
+/* The bracket line joining each round to the next, with a ball that rolls down it. */
+.joint {
   position: absolute;
   left: 50%;
   bottom: 100%;
-  height: 36px;
+  width: 14px;
+  height: 96px;
+  margin-left: -7px;
+  view-timeline: --joint block;
+}
+
+.jointLine {
+  position: absolute;
+  inset: 0 auto 0 6px;
   border-left: 2px dashed var(--line-strong);
+  transform-origin: 50% 0;
+}
+
+.jointBall {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ball);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--ball) 60%, transparent);
+}
+
+/* Big outlined year floating in the gap above its card, clear of the bracket line. */
+.yearMark {
+  position: absolute;
+  top: -74px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 64px;
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--line-strong);
+  pointer-events: none;
+}
+
+.entry[data-side='left'] .yearMark {
+  right: 4px;
+}
+
+.entry[data-side='right'] .yearMark {
+  left: 4px;
 }
 
 .flat {
+  position: relative;
   width: 100%;
   box-shadow: inset 0 0 0 1px var(--line);
   transform-style: flat;
@@ -430,4 +484,80 @@
 
 .flat[data-live='true'] {
   box-shadow: inset 0 0 0 2px var(--ball);
+}
+
+/*
+ * All list motion runs on CSS scroll timelines, which the browser drives off the main thread:
+ * cards swing in from alternating sides, the years drift slower than the page, and each bracket
+ * line draws itself as its ball rolls down. Without support the list is simply static.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .flat,
+    .yearMark,
+    .jointLine,
+    .jointBall {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+    }
+
+    .flat {
+      animation-name: card-in;
+      animation-timeline: --entry;
+      animation-range: entry 0% entry 40%;
+    }
+
+    .yearMark {
+      animation-name: year-drift;
+      animation-timeline: --entry;
+      animation-range: cover 0% cover 100%;
+    }
+
+    .jointLine {
+      animation-name: line-draw;
+      animation-timeline: --joint;
+      animation-range: cover 5% cover 45%;
+    }
+
+    .jointBall {
+      animation-name: ball-roll;
+      animation-timeline: --joint;
+      animation-range: cover 10% cover 50%;
+    }
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--from-x)) rotate(var(--from-turn)) scale(0.94);
+  }
+}
+
+@keyframes year-drift {
+  from {
+    transform: translateY(18px);
+  }
+  to {
+    transform: translateY(-18px);
+  }
+}
+
+@keyframes line-draw {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes ball-roll {
+  from {
+    opacity: 0;
+    transform: translateY(0) rotate(0);
+  }
+  20% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(82px) rotate(360deg);
+  }
 }

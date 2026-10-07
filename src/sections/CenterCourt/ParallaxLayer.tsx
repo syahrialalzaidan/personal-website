@@ -42,8 +42,11 @@ export function ParallaxLayer({
   )
 }
 
-/** The same plane held still, for phones: no scroll or pointer tracking, so nothing runs per frame. */
-export function StillLayer({
+/**
+ * A plane with no JS motion, for phones. Its parallax is a CSS scroll-driven animation (see the
+ * touch rules in CenterCourt.module.css), which the browser runs off the main thread.
+ */
+export function PlainLayer({
   className,
   children,
 }: Pick<ParallaxLayerProps, 'className' | 'children'>) {
