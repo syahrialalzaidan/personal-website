@@ -19,7 +19,7 @@ import { Floor } from './layers/Floor'
 import { HeroBall } from './layers/HeroBall'
 import { Sky } from './layers/Sky'
 import { Wall } from './layers/Wall'
-import { ParallaxLayer } from './ParallaxLayer'
+import { ParallaxLayer, StillLayer } from './ParallaxLayer'
 import { LANDSCAPE, PORTRAIT } from './stadium'
 import styles from './CenterCourt.module.css'
 
@@ -45,11 +45,9 @@ export function CenterCourt({ ready }: CenterCourtProps) {
   const stageRef = useRef<HTMLDivElement>(null)
   const ballBoundsRef = useRef<HTMLDivElement>(null)
   const portrait = useMediaQuery('(max-aspect-ratio: 1/1)')
-  // Mobile Safari re-draws a layer every time its scale changes, so on touch the camera doesn't
-  // zoom at all: planes only slide at different speeds, which the GPU can do for free.
+  // Phones get a still frame: no pinned scroll, no camera dolly and no scroll-linked fades. The
+  // stadium paints once and simply scrolls away, so nothing has to run while the page moves.
   const touch = useMediaQuery('(hover: none), (pointer: coarse)')
-  const plane = (zoom: number, drift: number, touchDrift: number) =>
-    touch ? { zoom: 1, drift: touchDrift } : { zoom, drift }
   // Once the hero is well off-screen its layers are dropped, freeing their GPU memory.
   const nearby = useInView(sectionRef, { margin: '50% 0px 50% 0px' })
   const layout = portrait ? PORTRAIT : LANDSCAPE
@@ -59,19 +57,17 @@ export function CenterCourt({ ready }: CenterCourtProps) {
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
   const still = useMotionValue(0)
-  const progress = reduceMotion ? still : scrollYProgress
+  const progress = reduceMotion || touch ? still : scrollYProgress
 
   // The caption sinks out below the frame and is fully gone within the first stretch of scroll.
-  // Touch pins for a much shorter distance, so it gets a larger share to leave at the same pace.
-  const captionEnd = touch ? 0.45 : 0.15
   // Explicitly clamped functions rather than range maps: the range-mapped opacity faded the
   // caption back in once scrolling passed the end of its range.
-  const captionOut = useTransform(progress, (value) => clamp(value / captionEnd, 0, 1))
+  const captionOut = useTransform(progress, (value) => clamp(value / 0.15, 0, 1))
   const overlayOpacity = useTransform(captionOut, (value) => 1 - value)
   const overlayY = useTransform(captionOut, (value) => value * 140)
-  // On touch the tour slides up over the hero's exit, so the court only dims rather than going
-  // blank: there's something on screen right up until the tour's heading arrives.
-  const fadeOut = useTransform(progress, touch ? [0.55, 1] : [0.72, 1], [0, touch ? 0.85 : 1])
+  const fadeOut = useTransform(progress, [0.72, 1], [0, 1])
+  // On phones the caption and hints just scroll away with the page.
+  const scrollFade = touch ? undefined : { opacity: overlayOpacity }
 
   const startWave = () => {
     setWaveKey((key) => key + 1)
@@ -92,27 +88,34 @@ export function CenterCourt({ ready }: CenterCourtProps) {
       aria-labelledby="hero-title"
     >
       <div ref={stageRef} className={styles.stage} style={stageStyle} data-dormant={!nearby}>
-        <ParallaxLayer progress={progress} depth={-6} {...plane(1.06, 0, 0)}>
-          <Sky layout={layout} />
-        </ParallaxLayer>
-        <ParallaxLayer progress={progress} depth={-12} {...plane(1.22, -40, -18)}>
-          <CrowdCanvas layout={layout} waveKey={waveKey} twinkle={!touch} />
-        </ParallaxLayer>
-        {/* Wall and floor always move together, so their seam never opens. */}
-        <ParallaxLayer progress={progress} depth={-18} {...plane(1.5, 0, -30)}>
-          <Wall layout={layout} />
-        </ParallaxLayer>
-        <ParallaxLayer progress={progress} depth={-18} {...plane(2.1, 0, -30)}>
-          <Floor layout={layout} />
-        </ParallaxLayer>
-        <ParallaxLayer
-          progress={progress}
-          depth={-10}
-          {...plane(1.3, 0, -24)}
-          className={styles.lightLayer}
-        >
-          <Beams layout={layout} />
-        </ParallaxLayer>
+        {touch ? (
+          <StillLayer>
+            <Sky layout={layout} />
+            <CrowdCanvas layout={layout} waveKey={waveKey} twinkle={false} />
+            <Wall layout={layout} />
+            <Floor layout={layout} />
+            <Beams layout={layout} />
+          </StillLayer>
+        ) : (
+          <>
+            <ParallaxLayer progress={progress} depth={-6} zoom={1.06}>
+              <Sky layout={layout} />
+            </ParallaxLayer>
+            <ParallaxLayer progress={progress} depth={-12} zoom={1.22} drift={-40}>
+              <CrowdCanvas layout={layout} waveKey={waveKey} twinkle />
+            </ParallaxLayer>
+            {/* Wall and floor always move together, so their seam never opens. */}
+            <ParallaxLayer progress={progress} depth={-18} zoom={1.5}>
+              <Wall layout={layout} />
+            </ParallaxLayer>
+            <ParallaxLayer progress={progress} depth={-18} zoom={2.1}>
+              <Floor layout={layout} />
+            </ParallaxLayer>
+            <ParallaxLayer progress={progress} depth={-10} zoom={1.3} className={styles.lightLayer}>
+              <Beams layout={layout} />
+            </ParallaxLayer>
+          </>
+        )}
 
         <button
           type="button"
@@ -128,7 +131,7 @@ export function CenterCourt({ ready }: CenterCourtProps) {
           rotate={-8}
           delay={1.2}
           className={styles.crowdSticker}
-          style={{ opacity: overlayOpacity }}
+          style={scrollFade}
         >
           Tap me
         </Sticker>
@@ -139,10 +142,13 @@ export function CenterCourt({ ready }: CenterCourtProps) {
           constraintsRef={ballBoundsRef}
           active={nearby}
           ready={ready}
-          hintOpacity={overlayOpacity}
+          hintOpacity={touch ? undefined : overlayOpacity}
         />
 
-        <motion.div className={styles.overlay} style={{ opacity: overlayOpacity, y: overlayY }}>
+        <motion.div
+          className={styles.overlay}
+          style={touch ? undefined : { opacity: overlayOpacity, y: overlayY }}
+        >
           <motion.div
             className={styles.caption}
             initial="hidden"
@@ -159,7 +165,9 @@ export function CenterCourt({ ready }: CenterCourtProps) {
           </motion.div>
         </motion.div>
 
-        <motion.div className={styles.fade} style={{ opacity: fadeOut }} aria-hidden="true" />
+        {!touch && (
+          <motion.div className={styles.fade} style={{ opacity: fadeOut }} aria-hidden="true" />
+        )}
       </div>
     </section>
   )

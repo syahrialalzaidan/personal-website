@@ -41,3 +41,11 @@ export function ParallaxLayer({
     </motion.div>
   )
 }
+
+/** The same plane held still, for phones: no scroll or pointer tracking, so nothing runs per frame. */
+export function StillLayer({
+  className,
+  children,
+}: Pick<ParallaxLayerProps, 'className' | 'children'>) {
+  return <div className={[styles.layer, className].filter(Boolean).join(' ')}>{children}</div>
+}

@@ -3,11 +3,26 @@
   height: 220svh;
 }
 
-/* Touch has no camera dolly to scroll through, so the pinned stretch is kept to half a screen:
-   one swipe clears the hero instead of two. */
+/* Phones get a still frame that scrolls away like any other section: nothing pins, nothing is
+   scroll-linked. A soft fade at the foot blends the court into the page below. */
 @media (hover: none), (pointer: coarse) {
   .section {
-    height: 150svh;
+    height: 100svh;
+  }
+
+  .stage::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 6;
+    height: 18%;
+    background: linear-gradient(transparent, var(--bg));
+    pointer-events: none;
+  }
+
+  .layer {
+    inset: 0;
+    will-change: auto;
   }
 }
 
@@ -162,15 +177,47 @@
 .heroBallBody {
   width: 100%;
   aspect-ratio: 1;
+  animation: hero-ball-bounce 1.15s infinite;
 }
 
+/* A gradient rather than a blur filter: a blurred element is re-rasterized as it scales. */
 .heroBallShadow {
   position: absolute;
-  inset: auto 8% -14px;
-  height: 12px;
+  inset: auto 0 -16px;
+  height: 16px;
   border-radius: 50%;
-  background: var(--shadow);
-  filter: blur(4px);
+  background: radial-gradient(closest-side, var(--shadow), transparent);
+  animation: hero-ball-shadow 1.15s infinite;
+}
+
+.heroBall[data-bouncing='false'] :is(.heroBallBody, .heroBallShadow) {
+  animation: none;
+}
+
+@keyframes hero-ball-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    animation-timing-function: ease-out;
+  }
+  50% {
+    transform: translateY(-90px);
+    animation-timing-function: ease-in;
+  }
+}
+
+@keyframes hero-ball-shadow {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+    animation-timing-function: ease-out;
+  }
+  50% {
+    transform: scale(0.5);
+    opacity: 0.2;
+    animation-timing-function: ease-in;
+  }
 }
 
 /* ---------- Broadcast caption ---------- */

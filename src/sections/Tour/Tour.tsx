@@ -4,8 +4,9 @@ import { SectionIntro } from '../../components/SectionIntro/SectionIntro'
 import { TennisBall } from '../../components/TennisBall/TennisBall'
 import { matches } from '../../content/experience'
 import { useHorizontalScroll } from '../../hooks/useHorizontalScroll'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { BracketLink } from './BracketLink'
-import { MatchCard } from './MatchCard'
+import { MatchCard, MatchCardFlat } from './MatchCard'
 import styles from './Tour.module.css'
 
 const YEARS = [...new Set(matches.map((match) => match.year))]
@@ -18,8 +19,40 @@ const ROUND_SHORT: Record<string, string> = {
   Final: 'F',
 }
 
-/** Experience as a tournament draw, pinned and scrubbed sideways by vertical scroll. */
+const INTRO = {
+  headingId: 'tour-title',
+  segment: '02',
+  eyebrow: 'The tour',
+  title: 'Five rounds, one draw',
+  lede: "Every team I've played for, starting with the final that's still in play and working back to the opening round.",
+} as const
+
+/**
+ * Experience as a tournament draw. Phones get a plain vertical list that scrolls natively; the
+ * pinned, sideways-scrubbing draw with its parallax planes is kept for larger screens.
+ */
 export function Tour() {
+  const touch = useMediaQuery('(hover: none), (pointer: coarse)')
+  return touch ? <TourList /> : <TourDraw />
+}
+
+function TourList() {
+  return (
+    <section id="tour" className={styles.listSection} aria-labelledby="tour-title">
+      <SectionIntro {...INTRO} />
+      <ol className={styles.list}>
+        {matches.map((match, index) => (
+          <li key={match.id}>
+            <MatchCardFlat match={match} index={index} />
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+/** The draw pinned in place and scrubbed sideways by vertical scroll. */
+function TourDraw() {
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const { distance, x, progress } = useHorizontalScroll(sectionRef, trackRef)
@@ -51,12 +84,9 @@ export function Tour() {
 
         <motion.div ref={trackRef} className={styles.track} style={{ x }}>
           <SectionIntro
+            {...INTRO}
             className={styles.intro}
-            headingId="tour-title"
-            segment="02"
-            eyebrow="The tour"
-            title="Five rounds, one draw"
-            lede="Every team I've played for, starting with the final that's still in play and working back to the opening round. Keep scrolling and the draw moves sideways."
+            lede={`${INTRO.lede} Keep scrolling and the draw moves sideways.`}
           />
 
           {matches.map((match, index) => (

@@ -24,13 +24,12 @@ export function MatchCard({ match, index, trackX }: MatchCardProps) {
   const opacity = useTransform(reveal, [0, 0.5], [0, 1])
   const scale = useTransform(reveal, [0, 1], [0.86, 1])
   const glare = useMotionTemplate`radial-gradient(420px circle at ${tilt.glareX}% ${tilt.glareY}%, var(--sheen), transparent 60%)`
-  const live = match.status === 'live'
 
   return (
     <motion.article
       ref={ref}
       className={`${styles.card} ${index % 2 === 0 ? styles.high : styles.low}`}
-      data-live={live}
+      data-live={match.status === 'live'}
       style={{ rotateX: tilt.rotateX, rotateY, opacity, scale }}
       aria-labelledby={`match-${match.id}`}
       {...tilt.handlers}
@@ -39,6 +38,28 @@ export function MatchCard({ match, index, trackX }: MatchCardProps) {
         <motion.div className={styles.glare} style={{ background: glare }} aria-hidden="true" />
       )}
 
+      <MatchDetails match={match} index={index} />
+    </motion.article>
+  )
+}
+
+/** The same card standing still, for the phone layout's plain vertical list. */
+export function MatchCardFlat({ match, index }: Omit<MatchCardProps, 'trackX'>) {
+  return (
+    <article
+      className={`${styles.card} ${styles.flat}`}
+      data-live={match.status === 'live'}
+      aria-labelledby={`match-${match.id}`}
+    >
+      <MatchDetails match={match} index={index} />
+    </article>
+  )
+}
+
+function MatchDetails({ match, index }: Omit<MatchCardProps, 'trackX'>) {
+  const live = match.status === 'live'
+  return (
+    <>
       <header className={styles.cardHeader}>
         <span className={styles.round}>{match.round}</span>
         <span>{match.period}</span>
@@ -86,6 +107,6 @@ export function MatchCard({ match, index, trackX }: MatchCardProps) {
         )}
         <span className={styles.matchNumber}>Match {String(index + 1).padStart(2, '0')}</span>
       </footer>
-    </motion.article>
+    </>
   )
 }

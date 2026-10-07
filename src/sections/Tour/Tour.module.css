@@ -394,24 +394,40 @@
   }
 }
 
-/* Blurred balls moving across the screen are costly on phones and barely register there. */
-@media (hover: none), (pointer: coarse) {
-  .foreground {
-    display: none;
-  }
+/* ---------- Phone list ---------- */
 
-  /* The intro sits mid-screen, so on a phone the tour slides up over the hero's fade-out instead
-     of leaving a blank screen between them. Its backdrop keeps only the glow (the page behind is
-     the same colour), so the fading court shows through the overlap. */
-  .section {
-    margin-top: -40svh;
-  }
+.listSection {
+  display: grid;
+  gap: 40px;
+  padding: 96px var(--gutter) 72px;
+}
 
-  .stage {
-    background: radial-gradient(
-      120% 80% at 50% 110%,
-      color-mix(in srgb, var(--court) 22%, transparent),
-      transparent 60%
-    );
-  }
+.list {
+  display: grid;
+  gap: 36px;
+}
+
+.list > li {
+  position: relative;
+}
+
+/* A short dashed bracket line joins each round to the next. */
+.list > li + li::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  height: 36px;
+  border-left: 2px dashed var(--line-strong);
+}
+
+.flat {
+  width: 100%;
+  box-shadow: inset 0 0 0 1px var(--line);
+  transform-style: flat;
+  will-change: auto;
+}
+
+.flat[data-live='true'] {
+  box-shadow: inset 0 0 0 2px var(--ball);
 }

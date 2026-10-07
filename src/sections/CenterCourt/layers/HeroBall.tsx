@@ -1,4 +1,4 @@
-import { motion, useReducedMotion, type MotionValue, type Transition } from 'motion/react'
+import { motion, useReducedMotion, type MotionValue } from 'motion/react'
 import { useState, type RefObject } from 'react'
 import { useSound } from '../../../audio/useSound'
 import { Sticker } from '../../../components/Sticker/Sticker'
@@ -11,15 +11,8 @@ interface HeroBallProps {
   active: boolean
   /** False while the walkout intro is still covering the page; the hint waits for it. */
   ready: boolean
-  /** Fades the hint out with the broadcast caption as the page scrolls. */
-  hintOpacity: MotionValue<number>
-}
-
-const BOUNCE: Transition = {
-  duration: 1.15,
-  repeat: Infinity,
-  times: [0, 0.5, 1],
-  ease: ['easeOut', 'easeIn'],
+  /** Fades the hint out with the broadcast caption as the page scrolls; phones leave it out. */
+  hintOpacity?: MotionValue<number>
 }
 
 /** A foreground ball that bounces in place and can be grabbed and thrown around the stage. */
@@ -43,6 +36,7 @@ export function HeroBall({ constraintsRef, active, ready, hintOpacity }: HeroBal
         setPlayed(true)
       }}
       onDragEnd={() => play('pock')}
+      data-bouncing={bouncing}
       role="img"
       aria-label="A tennis ball. Drag and throw it."
     >
@@ -52,26 +46,15 @@ export function HeroBall({ constraintsRef, active, ready, hintOpacity }: HeroBal
         delay={1.6}
         size="small"
         className={styles.ballSticker}
-        style={{ opacity: hintOpacity }}
+        style={hintOpacity && { opacity: hintOpacity }}
       >
         Throw me
       </Sticker>
-      <motion.div
-        className={styles.heroBallBody}
-        animate={bouncing ? { y: [0, -90, 0] } : { y: 0 }}
-        transition={BOUNCE}
-      >
+      {/* The bounce is a CSS animation, so it runs off the main thread and never fights scrolling. */}
+      <div className={styles.heroBallBody}>
         <TennisBall size="100%" />
-      </motion.div>
-      <motion.div
-        className={styles.heroBallShadow}
-        animate={
-          bouncing
-            ? { scale: [1, 0.5, 1], opacity: [0.55, 0.2, 0.55] }
-            : { scale: 1, opacity: 0.55 }
-        }
-        transition={BOUNCE}
-      />
+      </div>
+      <div className={styles.heroBallShadow} />
     </motion.div>
   )
 }
